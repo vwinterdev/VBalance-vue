@@ -4,7 +4,6 @@ import Button from 'primevue/button'
 import Card from 'primevue/card'
 import InputText from 'primevue/inputtext'
 import { ref, shallowRef } from 'vue'
-import { useRouter } from 'vue-router'
 import { useUploadImageMutation } from '@/modules/common/composables/useUpload'
 import { useCreateProfileMutation } from '../composables/useProfile'
 
@@ -110,7 +109,6 @@ const handleCreateProfile = async () => {
               v-model.trim="createProfileParams.lastName"
               type="text"
               placeholder="Введите вашу фамилию"
-              :disabled="isLoading"
               class="w-full"
               fluid
             />

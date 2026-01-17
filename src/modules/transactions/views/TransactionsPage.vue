@@ -6,6 +6,7 @@ import MonthSelector from '@/modules/common/components/MonthSelector.vue'
 import { useTransactions } from '@/modules/transactions/composables/useTransactions'
 import { useCategoriesQuery } from '@/modules/categories/composables/useCategories'
 import { Routes } from '@/router/routes'
+import type { Raw } from '@/modules/common/types/Raw'
 
 const router = useRouter()
 const openDrawer = inject<() => void>('openDrawer')
@@ -37,7 +38,7 @@ const groupedTransactions = computed(() => {
 
   const groups: Record<string, typeof transactions.value> = {}
 
-  transactions.value.forEach(transaction => {
+  transactions.value.forEach((transaction: Raw) => {
     const date = new Date(transaction.createdAt)
     const dateKey = date.toLocaleDateString('ru-RU')
 
@@ -59,13 +60,13 @@ const sortedDates = computed(() => {
 })
 
 const totalIncome = computed(() => {
-  return transactions.value?.reduce((sum, t) => {
+  return transactions.value?.reduce((sum: number, t: Raw) => {
     return t.isPositive ? sum + t.balance : sum
   }, 0) || 0
 })
 
 const totalExpense = computed(() => {
-  return transactions.value?.reduce((sum, t) => {
+  return transactions.value?.reduce((sum: number, t: Raw) => {
     return !t.isPositive ? sum + Math.abs(t.balance) : sum
   }, 0) || 0
 })
@@ -78,7 +79,7 @@ const navigateToCreateTransaction = () => {
 
 const formatDate = (dateString: string) => {
   const [day, month, year] = dateString.split('.')
-  const date = new Date(+year, +month - 1, +day)
+  const date = new Date(+year!, +month! - 1, +day!)
   const today = new Date()
   const yesterday = new Date(today)
   yesterday.setDate(yesterday.getDate() - 1)

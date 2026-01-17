@@ -44,9 +44,6 @@ const navigateToCreateTransaction = () => {
   router.push({ name: Routes.CREATE_TRANSACTION.name })
 }
 
-const navigateToTransactions = () => {
-  router.push({ name: Routes.TRANSACTIONS.name })
-}
 
 const navigateToCategories = () => {
   router.push({ name: Routes.CATEGORIES.name })

@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import { useMeQuery } from './modules/auth/composables/useAuth'
 
-const { data } = useMeQuery()
+const {} = useMeQuery()
 </script>
-
-
-
-
 
 <template>
   <RouterView />

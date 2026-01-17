@@ -5,7 +5,6 @@ import InputText from 'primevue/inputtext'
 import Message from 'primevue/message'
 import Password from 'primevue/password'
 
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { SchemasZod } from '@/modules/common/services/schemasZod'
 import { useLoginMutation } from '../composables/useAuth'
@@ -52,7 +51,6 @@ const goToRegister = () => {
               id="email"
               v-model="emailValue"
               placeholder="your@email.com"
-              :disabled="isLoading"
               class="w-full"
               fluid
             />
