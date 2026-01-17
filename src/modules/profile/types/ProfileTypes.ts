@@ -10,4 +10,3 @@ export interface CreateProfileData {
   lastName: string
   avatarPath?: string
 }
-

@@ -1,6 +1,4 @@
 export interface ErrorResponse {
-  message: string;
-  errors?: Record<string, string[]>;
+  message: string
+  errors?: Record<string, string[]>
 }
-
-

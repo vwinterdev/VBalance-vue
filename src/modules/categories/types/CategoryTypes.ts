@@ -5,5 +5,3 @@ export interface Category {
   color?: string
   icon?: string
 }
-
-

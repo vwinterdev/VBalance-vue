@@ -1,19 +1,15 @@
 <script setup lang="ts">
-import { ref, shallowRef } from 'vue'
-import { useRouter } from 'vue-router'
-import InputText from 'primevue/inputtext'
+import Avatar from 'primevue/avatar'
 import Button from 'primevue/button'
 import Card from 'primevue/card'
-
-import Avatar from 'primevue/avatar'
+import InputText from 'primevue/inputtext'
+import { ref, shallowRef } from 'vue'
+import { useRouter } from 'vue-router'
 import { useUploadImageMutation } from '@/modules/common/composables/useUpload'
 import { useCreateProfileMutation } from '../composables/useProfile'
 
-
-
 const avatar = ref<File | null>(null)
 const avatarPreview = ref<string | null>(null)
-
 
 const { mutateAsync } = useUploadImageMutation()
 const { mutateAsync: createProfileMutation } = useCreateProfileMutation()
@@ -21,7 +17,7 @@ const { mutateAsync: createProfileMutation } = useCreateProfileMutation()
 const createProfileParams = shallowRef({
   firstName: '',
   lastName: '',
-  avatarPath: ''
+  avatarPath: '',
 })
 
 const onFileSelect = (event: Event) => {
@@ -36,14 +32,13 @@ const onFileSelect = (event: Event) => {
       const response = await mutateAsync(file)
 
       createProfileParams.value.avatarPath = response.url
-
     }
     reader.readAsDataURL(file)
   }
 }
 
 const handleCreateProfile = async () => {
-    await createProfileMutation(createProfileParams.value)
+  await createProfileMutation(createProfileParams.value)
 }
 </script>
 

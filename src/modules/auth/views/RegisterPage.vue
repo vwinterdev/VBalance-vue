@@ -1,71 +1,71 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import InputText from 'primevue/inputtext';
-import Password from 'primevue/password';
-import Button from 'primevue/button';
-import Card from 'primevue/card';
-import Message from 'primevue/message';
-import { useRegisterMutation } from '../composables/useAuth';
+import Button from 'primevue/button'
+import Card from 'primevue/card'
+import InputText from 'primevue/inputtext'
+import Message from 'primevue/message'
+import Password from 'primevue/password'
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useRegisterMutation } from '../composables/useAuth'
 
-const router = useRouter();
+const router = useRouter()
 const { mutateAsync } = useRegisterMutation()
 
-const name = ref('');
-const email = ref('');
-const password = ref('');
-const confirmPassword = ref('');
-const errorMessage = ref('');
-const isLoading = ref(false);
+const name = ref('')
+const email = ref('')
+const password = ref('')
+const confirmPassword = ref('')
+const errorMessage = ref('')
+const isLoading = ref(false)
 
 const passwordsMatch = computed(() => {
-  if (!confirmPassword.value) return true;
-  return password.value === confirmPassword.value;
-});
+  if (!confirmPassword.value) return true
+  return password.value === confirmPassword.value
+})
 
 const handleRegister = async () => {
-  errorMessage.value = '';
-  
+  errorMessage.value = ''
+
   // Валидация
   if (!name.value || !email.value || !password.value || !confirmPassword.value) {
-    errorMessage.value = 'Пожалуйста, заполните все поля';
-    return;
+    errorMessage.value = 'Пожалуйста, заполните все поля'
+    return
   }
 
   if (!email.value.includes('@')) {
-    errorMessage.value = 'Введите корректный email';
-    return;
+    errorMessage.value = 'Введите корректный email'
+    return
   }
 
   if (password.value.length < 6) {
-    errorMessage.value = 'Пароль должен содержать минимум 6 символов';
-    return;
+    errorMessage.value = 'Пароль должен содержать минимум 6 символов'
+    return
   }
 
   if (!passwordsMatch.value) {
-    errorMessage.value = 'Пароли не совпадают';
-    return;
+    errorMessage.value = 'Пароли не совпадают'
+    return
   }
 
-  isLoading.value = true;
+  isLoading.value = true
 
   try {
     await mutateAsync({
       email: email.value,
       password: password.value,
-    });
-    
-    router.push({ name: 'email-verification' });
+    })
+
+    router.push({ name: 'email-verification' })
   } catch (error) {
-    errorMessage.value = 'Ошибка регистрации. Попробуйте снова.';
+    errorMessage.value = 'Ошибка регистрации. Попробуйте снова.'
   } finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
-};
+}
 
 const goToLogin = () => {
-  router.push({ name: 'login' });
-};
+  router.push({ name: 'login' })
+}
 </script>
 
 <template>

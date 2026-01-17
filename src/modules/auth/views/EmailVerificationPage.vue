@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-import Button from 'primevue/button';
-import Card from 'primevue/card';
-import Message from 'primevue/message';
+import Button from 'primevue/button'
+import Card from 'primevue/card'
+import Message from 'primevue/message'
+import { useRouter } from 'vue-router'
 
-const router = useRouter();
+const router = useRouter()
 
 const goToLogin = () => {
-  router.push({ name: 'login' });
-};
+  router.push({ name: 'login' })
+}
 </script>
 
 <template>

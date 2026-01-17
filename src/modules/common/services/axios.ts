@@ -1,16 +1,16 @@
 import axios from 'axios'
-import { env } from '../configs/env'
-import { tokenService } from './tokenService'
 import router from '@/router'
-import { HTTPStatus } from '../enums/HTTPStatus'
 import { Routes } from '@/router/routes'
+import { env } from '../configs/env'
+import { HTTPStatus } from '../enums/HTTPStatus'
+import { tokenService } from './tokenService'
 
 export const axiosInstance = axios.create({
   baseURL: env.apiUrl,
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 })
 
 axiosInstance.interceptors.request.use(
@@ -23,7 +23,7 @@ axiosInstance.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error)
-  }
+  },
 )
 
 axiosInstance.interceptors.response.use(
@@ -37,6 +37,5 @@ axiosInstance.interceptors.response.use(
       router.push(Routes.LOGIN)
     }
     return Promise.reject(error)
-  }
+  },
 )
-

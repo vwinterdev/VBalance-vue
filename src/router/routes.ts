@@ -1,7 +1,11 @@
 export const Routes = {
+  HOME: {
+    name: 'home',
+    path: '/',
+  },
   TRANSACTIONS: {
     name: 'transactions',
-    path: '/',
+    path: '/transactions',
   },
   CREATE_TRANSACTION: {
     name: 'create-transaction',
@@ -33,5 +37,4 @@ export const Routes = {
     name: 'categories',
     path: '/categories',
   },
-};
-
+}

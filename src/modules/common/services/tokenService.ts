@@ -15,7 +15,5 @@ export const tokenService = {
 
   hasToken(): boolean {
     return !!this.getToken()
-  }
+  },
 }
-
-

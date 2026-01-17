@@ -1,57 +1,37 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import InputText from 'primevue/inputtext';
-import Password from 'primevue/password';
-import Button from 'primevue/button';
-import Card from 'primevue/card';
-import Message from 'primevue/message';
+import Button from 'primevue/button'
+import Card from 'primevue/card'
+import InputText from 'primevue/inputtext'
+import Message from 'primevue/message'
+import Password from 'primevue/password'
 
-import { useLoginMutation } from '../composables/useAuth';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { SchemasZod } from '@/modules/common/services/schemasZod'
+import { useLoginMutation } from '../composables/useAuth'
+import { useField } from 'vee-validate';
+import { Routes } from '@/router/routes'
 
-const router = useRouter();
+const router = useRouter()
 
-const { mutateAsync } = useLoginMutation()
+const { mutateAsync, isPending, error } = useLoginMutation()
 
-const email = ref('');
-const password = ref('');
-const errorMessage = ref('');
-const isLoading = ref(false);
+const { value: emailValue, errorMessage: emailErrorMessage } = useField('email', SchemasZod.email)
+const { value: passwordValue, errorMessage: passwordErrorMessage } = useField('password', SchemasZod.password)
 
 const handleLogin = async () => {
-  errorMessage.value = '';
-  
-  // Валидация
-  if (!email.value || !password.value) {
-    errorMessage.value = 'Пожалуйста, заполните все поля';
-    return;
-  }
+    const result = await mutateAsync({
+      email: emailValue.value,
+      password: passwordValue.value,
+    })
+    console.log(result)
+    router.push(Routes.TRANSACTIONS)
 
-  if (!email.value.includes('@')) {
-    errorMessage.value = 'Введите корректный email';
-    return;
-  }
-
-  isLoading.value = true;
-
-  try {
-    await mutateAsync({
-      email: email.value,
-      password: password.value,
-    });
-    
-    // После успешной авторизации перенаправляем на главную
-    router.push({ name: 'home' });
-  } catch (error) {
-    errorMessage.value = 'Ошибка авторизации. Проверьте данные и попробуйте снова.';
-  } finally {
-    isLoading.value = false;
-  }
-};
+}
 
 const goToRegister = () => {
-  router.push({ name: 'register' });
-};
+  router.push(Routes.REGISTER)
+}
 </script>
 
 <template>
@@ -64,58 +44,54 @@ const goToRegister = () => {
       </template>
 
       <template #content>
+
         <form @submit.prevent="handleLogin" class="flex flex-col gap-5">
-          <!-- Email -->
           <div class="flex flex-col gap-2">
             <label for="email" class="font-semibold text-gray-700 dark:text-gray-300">Email</label>
             <InputText
               id="email"
-              v-model="email"
-              type="email"
+              v-model="emailValue"
               placeholder="your@email.com"
               :disabled="isLoading"
               class="w-full"
               fluid
             />
+            <Message size="small" severity="error" variant="simple">{{emailErrorMessage}}</Message>
           </div>
 
-          <!-- Password -->
           <div class="flex flex-col gap-2">
             <label for="password" class="font-semibold text-gray-700 dark:text-gray-300">Пароль</label>
             <Password
               id="password"
-              v-model="password"
+              v-model="passwordValue"
               placeholder="Введите пароль"
               :feedback="false"
               toggleMask
-              :disabled="isLoading"
+              :disabled="isPending"
               fluid
             />
+            <Message size="small" severity="error" variant="simple">{{passwordErrorMessage}}</Message>
           </div>
 
-          <!-- Error Message -->
-          <Message v-if="errorMessage" severity="error" :closable="false">
-            {{ errorMessage }}
+          <Message v-if="error" severity="error" :closable="false">
+            {{error}}
           </Message>
 
-          <!-- Login Button -->
           <Button
             type="submit"
             label="Войти"
             icon="pi pi-sign-in"
-            :loading="isLoading"
+            :loading="isPending"
             class="w-full"
             severity="success"
           />
 
-          <!-- Divider -->
           <div class="flex items-center gap-2 my-2">
             <div class="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
             <span class="text-sm text-gray-500 dark:text-gray-400">или</span>
             <div class="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
           </div>
 
-          <!-- Register Link -->
           <Button
             type="button"
             label="Создать аккаунт"
@@ -125,14 +101,6 @@ const goToRegister = () => {
             @click="goToRegister"
           />
         </form>
-      </template>
-
-      <template #footer>
-        <div class="text-center text-sm text-gray-500 dark:text-gray-400">
-          <a href="#" class="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300">
-            Забыли пароль?
-          </a>
-        </div>
       </template>
     </Card>
 </template>
