@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, provide } from 'vue'
 import { useRouter } from 'vue-router'
-import Drawer from 'primevue/drawer'
 import { Routes } from '@/router/routes'
 
 const router = useRouter()

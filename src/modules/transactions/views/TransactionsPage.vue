@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, inject } from 'vue'
 import { useRouter } from 'vue-router'
-import Button from 'primevue/button'
 import MonthSelector from '@/modules/common/components/MonthSelector.vue'
 import { useTransactions } from '@/modules/transactions/composables/useTransactions'
 import { useCategoriesQuery } from '@/modules/categories/composables/useCategories'

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
-import Button from 'primevue/button'
-import InputNumber from 'primevue/inputnumber'
 import {
   useCategoriesQuery,
 } from '@/modules/categories/composables/useCategories'

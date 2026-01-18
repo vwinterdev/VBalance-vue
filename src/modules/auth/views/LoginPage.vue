@@ -1,9 +1,4 @@
 <script setup lang="ts">
-import Button from 'primevue/button'
-import Card from 'primevue/card'
-import InputText from 'primevue/inputtext'
-import Message from 'primevue/message'
-import Password from 'primevue/password'
 
 import { useRouter } from 'vue-router'
 import { SchemasZod } from '@/modules/common/services/schemasZod'

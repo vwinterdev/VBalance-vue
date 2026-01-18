@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import Button from 'primevue/button'
-import Card from 'primevue/card'
-import Message from 'primevue/message'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()

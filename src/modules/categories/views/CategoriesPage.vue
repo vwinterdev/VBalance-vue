@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
-import Button from 'primevue/button'
 import { useCategoriesQuery } from '../composables/useCategories'
 import CategoriesList from '../components/CategoriesList.vue'
 import CreateCategoryDialog from '../components/CreateCategoryDialog.vue'

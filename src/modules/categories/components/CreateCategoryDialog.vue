@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import Dialog from 'primevue/dialog'
-import InputText from 'primevue/inputtext'
-import Button from 'primevue/button'
 import { ALL_EMOJIS, POPULAR_EMOJIS } from '@/modules/common/constants/emojis'
 import { useCreateCategoryMutation } from '../composables/useCategories'
 

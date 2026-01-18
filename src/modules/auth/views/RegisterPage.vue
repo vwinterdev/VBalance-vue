@@ -1,9 +1,4 @@
 <script setup lang="ts">
-import Button from 'primevue/button'
-import Card from 'primevue/card'
-import InputText from 'primevue/inputtext'
-import Message from 'primevue/message'
-import Password from 'primevue/password'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useRegisterMutation } from '../composables/useAuth'

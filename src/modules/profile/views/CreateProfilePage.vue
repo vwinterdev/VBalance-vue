@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import Avatar from 'primevue/avatar'
-import Button from 'primevue/button'
-import Card from 'primevue/card'
-import InputText from 'primevue/inputtext'
 import { ref, shallowRef } from 'vue'
 import { useUploadImageMutation } from '@/modules/common/composables/useUpload'
 import { useCreateProfileMutation } from '../composables/useProfile'
