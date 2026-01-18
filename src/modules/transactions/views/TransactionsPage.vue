@@ -5,7 +5,7 @@ import MonthSelector from '@/modules/common/components/MonthSelector.vue'
 import { useTransactions } from '@/modules/transactions/composables/useTransactions'
 import { useCategoriesQuery } from '@/modules/categories/composables/useCategories'
 import { Routes } from '@/router/routes'
-import type { Raw } from '@/modules/common/types/Raw'
+import type { Transaction } from '@/modules/transactions/adapters/Transaction'
 
 const router = useRouter()
 const openDrawer = inject<() => void>('openDrawer')
@@ -35,9 +35,9 @@ const getCategoryById = (categoryId: number) => {
 const groupedTransactions = computed(() => {
   if (!transactions.value) return {}
 
-  const groups: Record<string, typeof transactions.value> = {}
+  const groups: Record<string, Transaction[]> = {}
 
-  transactions.value.forEach((transaction: Raw) => {
+  transactions.value.forEach((transaction: Transaction) => {
     const date = new Date(transaction.createdAt)
     const dateKey = date.toLocaleDateString('ru-RU')
 
@@ -59,13 +59,13 @@ const sortedDates = computed(() => {
 })
 
 const totalIncome = computed(() => {
-  return transactions.value?.reduce((sum: number, t: Raw) => {
+  return transactions.value?.reduce((sum: number, t: Transaction) => {
     return t.isPositive ? sum + t.balance : sum
   }, 0) || 0
 })
 
 const totalExpense = computed(() => {
-  return transactions.value?.reduce((sum: number, t: Raw) => {
+  return transactions.value?.reduce((sum: number, t: Transaction) => {
     return !t.isPositive ? sum + Math.abs(t.balance) : sum
   }, 0) || 0
 })

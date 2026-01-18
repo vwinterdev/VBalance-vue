@@ -1,21 +1,23 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
+import Button from 'primevue/button'
+import InputNumber from 'primevue/inputnumber'
 import {
   useCategoriesQuery,
 } from '@/modules/categories/composables/useCategories'
+import { useCreateTransactionMutation } from '@/modules/transactions/composables/useTransactions'
 import { Category } from '@/modules/categories/adapters/Category.ts'
 import { Routes } from '@/router/routes'
-import { axiosInstance } from '@/modules/common/services/axios'
 
 const router = useRouter()
 const openDrawer = inject<() => void>('openDrawer')
 
 const { data: categories, isLoading } = useCategoriesQuery()
+const { mutateAsync, isPending } = useCreateTransactionMutation()
 
 const selectedCategory = ref<Category | null>(null)
 const amount = ref<number | null>(null)
-const isSubmitting = ref(false)
 const amountInput = ref<any>(null)
 
 const expenseCategories = computed(() =>
@@ -44,9 +46,8 @@ const createTransaction = async () => {
     return
   }
 
-  isSubmitting.value = true
   try {
-    await axiosInstance.post('/transactions/create', {
+    await mutateAsync({
       balance: amount.value,
       categoryId: selectedCategory.value.id,
     })
@@ -54,8 +55,6 @@ const createTransaction = async () => {
     router.push({ name: Routes.TRANSACTIONS.name })
   } catch (error) {
     console.error('Failed to create transaction:', error)
-  } finally {
-    isSubmitting.value = false
   }
 }
 
@@ -110,6 +109,7 @@ const navigateBack = () => {
                 :minFractionDigits="0"
                 :maxFractionDigits="2"
                 placeholder="0"
+                @keydown.enter="createTransaction"
                 :useGrouping="false"
                 class="w-full text-center"
                 inputClass="text-4xl font-bold text-gray-800 text-center border-0 focus:ring-0 p-0"
@@ -183,8 +183,8 @@ const navigateBack = () => {
               label="Сохранить"
               severity="primary"
               @click="createTransaction"
-              :disabled="!amount || amount === 0 || isSubmitting"
-              :loading="isSubmitting"
+              :disabled="!amount || amount === 0 || isPending"
+              :loading="isPending"
               class="w-full"
               size="large"
             />
