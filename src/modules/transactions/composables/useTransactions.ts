@@ -62,7 +62,7 @@ export const useCreateTransactionMutation = () => {
             return { previousTransactions }
         },
 
-        onError: (err, newTransaction, context) => {
+        onError: (err, _newTransaction, context) => {
             console.error('onError - rolling back', err)
             // Откатываем изменения при ошибке
             if (context?.previousTransactions) {
