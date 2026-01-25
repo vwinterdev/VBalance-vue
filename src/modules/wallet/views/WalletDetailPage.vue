@@ -1,13 +1,20 @@
 <script setup lang="ts">
 import { ref, computed, inject } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import MonthSelector from '@/modules/common/components/MonthSelector.vue'
-import { useTransactions } from '@/modules/transactions/composables/useTransactions'
+import { useWalletTransactions } from '@/modules/transactions/composables/useTransactions'
+import { useWalletQuery } from '../composables/useWallets'
 import { Routes } from '@/router/routes'
 import type { Transaction } from '@/modules/transactions/adapters/Transaction'
 
 const router = useRouter()
+const route = useRoute()
 const openDrawer = inject<() => void>('openDrawer')
+
+const walletId = computed(() => {
+  const id = route.params.id
+  return id ? parseInt(id as string) : undefined
+})
 
 const currentDate = ref(new Date())
 
@@ -24,9 +31,14 @@ const filters = computed(() => ({
   year: currentDate.value.getFullYear()
 }))
 
-const { data: transactions, isLoading } = useTransactions(filters)
+const { data: wallet, isLoading: isLoadingWallet } = useWalletQuery(computed(() => walletId.value ?? 0))
+const { data: transactions, isLoading: isLoadingTransactions } = useWalletTransactions(walletId, filters)
 // Категории больше не нужны, так как они приходят с транзакциями
-// const { data: categories } = useCategoriesQuery()
+// const { data: categories } = useCategoriesQuery(walletId.value)
+
+const isLoading = computed(() => isLoadingWallet.value || isLoadingTransactions.value)
+
+// Функция getCategoryById больше не нужна, используем transaction.category напрямую
 
 const groupedTransactions = computed(() => {
   if (!transactions.value) return {}
@@ -69,7 +81,14 @@ const totalExpense = computed(() => {
 const balance = computed(() => totalIncome.value - totalExpense.value)
 
 const navigateToCreateTransaction = () => {
-  router.push({ name: Routes.CREATE_TRANSACTION.name })
+  router.push({ 
+    name: Routes.CREATE_TRANSACTION.name,
+    query: { walletId: walletId.value }
+  })
+}
+
+const navigateBack = () => {
+  router.push({ name: Routes.HOME.name })
 }
 
 const formatDate = (dateString: string) => {
@@ -90,6 +109,7 @@ const formatDate = (dateString: string) => {
 
 <template>
   <div class="min-h-screen bg-gray-50 flex flex-col">
+    <!-- Header -->
     <div class="bg-white px-4 py-3 flex items-center justify-between shadow-sm">
       <Button
         icon="pi pi-bars"
@@ -99,10 +119,41 @@ const formatDate = (dateString: string) => {
         aria-label="Меню"
         class="text-gray-600"
       />
-      <h1 class="text-lg font-semibold text-gray-800">Транзакции</h1>
-      <div class="w-10"></div>
+      <h1 class="text-lg font-semibold text-gray-800">
+        <span v-if="wallet">{{ wallet.icon }} {{ wallet.name }}</span>
+        <span v-else>Кошелек</span>
+      </h1>
+      <Button
+        icon="pi pi-times"
+        text
+        rounded
+        @click="navigateBack"
+        aria-label="Назад"
+        class="text-gray-600"
+      />
     </div>
 
+    <!-- Wallet Info -->
+    <div v-if="wallet" class="bg-white px-4 py-4 shadow-sm border-b">
+      <div class="max-w-md mx-auto">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <p class="text-sm text-gray-500">Баланс кошелька</p>
+            <p class="text-2xl font-bold" :style="{ color: wallet.color }">
+              {{ wallet.balance.toLocaleString('ru-RU') }} {{ wallet.currency }}
+            </p>
+          </div>
+          <div
+            class="w-16 h-16 rounded-full flex items-center justify-center text-3xl"
+            :style="{ backgroundColor: wallet.color }"
+          >
+            {{ wallet.icon }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Month Selector and Stats -->
     <div class="bg-white px-4 py-4 shadow-sm">
       <div class="max-w-md mx-auto">
         <h2 class="text-center text-lg font-semibold text-gray-700 mb-3">{{ currentMonth }} {{ currentYear }}</h2>
@@ -126,6 +177,7 @@ const formatDate = (dateString: string) => {
       <MonthSelector v-model:currentDate="currentDate" position="static" />
     </div>
 
+    <!-- Transactions List -->
     <div class="flex-1 overflow-y-auto p-4 pb-24">
       <div class="max-w-md mx-auto">
         <div v-if="isLoading" class="flex items-center justify-center h-64">
@@ -182,6 +234,7 @@ const formatDate = (dateString: string) => {
       </div>
     </div>
 
+    <!-- Add Transaction Button -->
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-4">
       <Button
         icon="pi pi-plus"

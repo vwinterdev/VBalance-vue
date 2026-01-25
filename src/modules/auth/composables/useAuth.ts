@@ -26,10 +26,11 @@ export const useLoginMutation = () => {
 
 export const useRegisterMutation = () => {
   return useMutation({
-    mutationFn: async (params: { email: string; password: string }) => {
+    mutationFn: async (params: { email: string; password: string; displayName: string }) => {
       const response = await axiosInstance.post('/auth/signup', {
         email: params.email,
         password: params.password,
+        display_name: params.displayName,
       })
       tokenService.setToken(response.data?.access_token)
       return response.data
@@ -43,6 +44,7 @@ export const useMeQuery = () => {
     queryFn: async () => {
       return axiosInstance.get('/auth/me')
     },
+    enabled: computed(() => tokenService.hasToken()),
   })
 }
 

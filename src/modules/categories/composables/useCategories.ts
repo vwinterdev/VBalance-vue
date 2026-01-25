@@ -3,11 +3,12 @@ import { Category } from '@/modules/categories/adapters/Category.ts'
 import { axiosInstance } from '@/modules/common/services/axios'
 import type { ResponseList } from '@/modules/common/types/Raw.ts'
 
-export const useCategoriesQuery = () => {
+export const useCategoriesQuery = (walletId?: number) => {
   return useQuery({
-    queryKey: ['categories'],
+    queryKey: ['categories', walletId],
     queryFn: async () => {
-      const response = await axiosInstance.get<ResponseList>('/category/all')
+      const params = walletId ? { walletId } : {}
+      const response = await axiosInstance.get<ResponseList>('/category/all', { params })
       return response.data.list.map(Category.fromRaw)
     },
   })
@@ -22,7 +23,8 @@ export const useCreateCategoryMutation = () => {
       icon: string
       color: string
       secondColor?: string
-      type: 'incomes' | 'expenses'
+      type: 'incomes' | 'expenses' | 'mixed'
+      walletId: number
     }) => {
       const response = await axiosInstance.post('/category/create', {
         name: params.name,
@@ -30,10 +32,15 @@ export const useCreateCategoryMutation = () => {
         color: params.color,
         second_color: params.secondColor || params.color,
         type: params.type,
+        walletId: params.walletId,
       })
       return response.data
     },
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
+      // Инвалидируем кэш для конкретного кошелька и общий кэш
+      if (variables.walletId) {
+        queryClient.invalidateQueries({ queryKey: ['categories', variables.walletId] })
+      }
       queryClient.invalidateQueries({ queryKey: ['categories'] })
     },
   })

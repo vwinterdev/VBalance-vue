@@ -6,7 +6,7 @@ export class Category {
   icon: string
   color: string
   secondColor: string
-  type: 'incomes' | 'expenses'
+  type: 'incomes' | 'expenses' | 'mixed'
 
   constructor(raw: Raw) {
     this.id = raw.id

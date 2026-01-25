@@ -23,7 +23,7 @@ const router = createRouter({
       children: [
         {
           ...Routes.HOME,
-          component: () => import('@/modules/home/views/HomePage.vue'),
+          component: () => import('@/modules/wallet/views/WalletsPage.vue'),
         },
         {
           ...Routes.TRANSACTIONS,
@@ -36,6 +36,10 @@ const router = createRouter({
         {
           ...Routes.CATEGORIES,
           component: () => import('@/modules/categories/views/CategoriesPage.vue'),
+        },
+        {
+          ...Routes.WALLET_DETAIL,
+          component: () => import('@/modules/wallet/views/WalletDetailPage.vue'),
         },
       ],
     },

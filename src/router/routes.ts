@@ -37,4 +37,8 @@ export const Routes = {
     name: 'categories',
     path: '/categories',
   },
+  WALLET_DETAIL: {
+    name: 'wallet-detail',
+    path: '/wallet/:id',
+  },
 }
